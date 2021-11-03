@@ -2,7 +2,7 @@ const { MongoClient, ObjectId } = require('mongodb')
 
 //Localhost URL
 const connectionURL = 'mongodb://127.0.0.1:27017'
-const databaseName = 'task-manager'
+const databaseName = 'task-manager-api'
 
 // const id = new ObjectId()
 // console.log(id.getTimestamp())
@@ -24,7 +24,7 @@ MongoClient.connect(connectionURL, { useNewUrlParser: true }, (error, client) =>
     // })
 
     // *** Deleting single document by ObjectId
-    // db.collection('users').deleteOne({_id: ObjectId('6181988200bf36064d96f1cb')}, (error, result) => {
+    // db.collection('users').deleteMany({name: "Test"}, (error, result) => {
     //     if(error)return console.log('Error with deleting documents')
     //     console.log(result.deletedCount)
     // })
