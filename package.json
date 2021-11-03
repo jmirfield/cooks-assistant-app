@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node mongodb.js"
+    "start": "node mongodb.js",
+    "mongodb": "/Users/Administrator/desktop/mongodb/bin/mongod.exe --dbpath=/Users/Administrator/mongodb-data"
   },
   "keywords": [],
   "author": "",
