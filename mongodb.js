@@ -30,8 +30,8 @@ MongoClient.connect(connectionURL, { useNewUrlParser: true }, (error, client) =>
     // })
     
     // Retuns all documents in 'users' collection
-    db.collection('users').find({}).toArray(function(err, result) {
-        if (err) throw err
+    db.collection('users').find({}).toArray((err, result) => {
+        if (err) return console.log(err)
         console.log(result)
     })
     
