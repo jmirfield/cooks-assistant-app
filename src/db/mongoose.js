@@ -42,13 +42,22 @@ const User = mongoose.model('User', {
     }
 })
 
+const Task = mongoose.model('Task', {
+    description: {
+        type: String,
+        trim: true,
+        required: true
+    },
+    completed: {
+        type: Boolean,
+        default: false
+    }
+})
+
 
 // Testing User model and saving to DB
-const test = new User({
-    name: 'Justin',
-    age: 24,
-    email: "justiN@test.com",
-    password: "test1234"
+const test = new Task({
+    description: "Test test test"
 })
 
 test.save().then(() => {

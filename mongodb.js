@@ -29,8 +29,15 @@ MongoClient.connect(connectionURL, { useNewUrlParser: true }, (error, client) =>
     //     console.log(result.deletedCount)
     // })
     
+    // Retuns all collections within given DB
+    db.listCollections().toArray().then((col) => {
+        console.log(col)
+    }).catch((err) => {
+        console.log(err)
+    })
+
     // Retuns all documents in 'users' collection
-    db.collection('users').find({}).toArray((err, result) => {
+    db.collection('tasks').find({}).toArray((err, result) => {
         if (err) return console.log(err)
         console.log(result)
     })
