@@ -24,7 +24,7 @@ MongoClient.connect(connectionURL, { useNewUrlParser: true }, (error, client) =>
     // })
 
     // *** Deleting single document by ObjectId
-    // db.collection('users').deleteMany({name: "Test"}, (error, result) => {
+    // db.collection('users').deleteMany({name: "Justin"}, (error, result) => {
     //     if(error)return console.log('Error with deleting documents')
     //     console.log(result.deletedCount)
     // })
