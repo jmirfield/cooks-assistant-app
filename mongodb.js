@@ -24,20 +24,20 @@ MongoClient.connect(connectionURL, { useNewUrlParser: true }, (error, client) =>
     // })
 
     // *** Deleting single document by ObjectId
-    // db.collection('users').deleteMany({name: "Justin"}, (error, result) => {
+    // db.collection('recipes').deleteMany({__v: 0}, (error, result) => {
     //     if(error)return console.log('Error with deleting documents')
     //     console.log(result.deletedCount)
     // })
     
     // Retuns all collections within given DB
-    db.listCollections().toArray().then((col) => {
-        console.log(col)
-    }).catch((err) => {
-        console.log(err)
-    })
+    // db.listCollections().toArray().then((col) => {
+    //     console.log(col)
+    // }).catch((err) => {
+    //     console.log(err)
+    // })
 
     // Retuns all documents in 'users' collection
-    db.collection('tasks').find({}).toArray((err, result) => {
+    db.collection('recipes').find({}).toArray((err, result) => {
         if (err) return console.log(err)
         console.log(result)
     })

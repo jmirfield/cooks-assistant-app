@@ -2,6 +2,7 @@ const express = require('express')
 require('./db/mongoose')
 const User = require('./models/user')
 const Task = require('./models/task')
+const Recipe = require('./models/recipe')
 
 const app = express()
 const PORT = process.env.PORT || 3000
@@ -57,6 +58,23 @@ app.get('/tasks/:id', (req, res) => {
     Task.findById(_id).then((task) => {
         if(!task)return res.status(404).send()
         res.send(task)
+    }).catch((err) => {
+        res.status(500).send(err)
+    })
+})
+
+app.post('/recipes', (req, res) => {
+    const recipe = new Recipe(req.body)
+    recipe.save().then(() => {
+        res.status(201).send(recipe)
+    }).catch((error) => {
+        res.status(400).send(error)
+    })
+})
+
+app.get('/recipes', (req, res) => {
+    Recipe.find({}).then((recipes) => {
+        res.send(recipes)
     }).catch((err) => {
         res.status(500).send(err)
     })

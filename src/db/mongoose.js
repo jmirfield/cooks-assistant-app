@@ -6,7 +6,7 @@ const DATABASE_NAME = 'task-manager-api'
 mongoose.connect(CONNECTION_URL + DATABASE_NAME, { 
     useNewUrlParser: true
 }, (err) => {
-    if(err)throw err
+    if(err)console.log(err)
 })
 
 

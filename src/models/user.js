@@ -2,16 +2,10 @@ const mongoose = require('mongoose')
 const validator = require('validator')
 
 const User = mongoose.model('User', {
-    name: {
+    userName: {
         type: String,
         required: true,
         trim: true
-    },
-    age: {
-        type: Number,
-        validate(val) {
-            if(val < 0) throw new Error('Age must be > 0')
-        }
     },
     email: {
         type: String,
@@ -19,7 +13,7 @@ const User = mongoose.model('User', {
         trim: true,
         lowercase: true,
         validate(val) {
-            if(!validator.isEmail(val))throw new Error(`Input: "${val}" is not a valid email`)
+            if(!validator.isEmail(val))throw new Error(`"${val}" is not a valid email`)
         }
     },
     password: {
