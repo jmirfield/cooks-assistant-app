@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node src/index.js",
     "dev": "nodemon src/index.js",
-    "mongodb": "/Users/Administrator/desktop/mongodb/bin/mongod.exe --dbpath=/Users/Administrator/mongodb-data",
+    "mongodb": "/Users/justin/Desktop/mongodb/bin/mongod.exe --dbpath=/Users/justin/Desktop/Programs/DB/mongodb-data",
     "dbread": "node mongodb.js"
   },
   "keywords": [],
