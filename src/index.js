@@ -54,6 +54,17 @@ app.patch('/users/:id', async (req, res) => {
     }
 })
 
+app.delete('/users/:id', async (req, res) => {
+    const _id = req.params.id
+    try{
+        const user = await User.findByIdAndDelete(_id)
+        if(!user)return res.status(404).send()
+        res.send(user)
+    } catch(e) {
+        res.status(500).send(e)
+    }
+})
+
 app.post('/recipes', async (req, res) => {
     const recipe = new Recipe(req.body)
     try {
@@ -92,6 +103,17 @@ app.patch('/recipes/:id', async (req, res) => {
     const _id = req.params.id
     try {
         const recipe = await Recipe.findByIdAndUpdate(_id, req.body, { new: true, runValidators: true})
+        if(!recipe)return res.status(404).send()
+        res.send(recipe)
+    } catch(e) {
+        res.status(500).send(e)
+    }
+})
+
+app.delete('/recipes/:id', async (req, res) => {
+    const _id = req.params.id
+    try{
+        const recipe = await Recipe.findByIdAndDelete(_id)
         if(!recipe)return res.status(404).send()
         res.send(recipe)
     } catch(e) {
