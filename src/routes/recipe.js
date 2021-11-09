@@ -40,8 +40,10 @@ router.patch('/recipes/:id', async (req, res) => {
     if(!isValidUpdate)return res.status(400).send({'error': 'Invalid updates!'})
     const _id = req.params.id
     try {
-        const recipe = await Recipe.findByIdAndUpdate(_id, req.body, { new: true, runValidators: true})
+        const recipe = await Recipe.findById(_id)
         if(!recipe)return res.status(404).send()
+        updates.forEach((update) => recipe[update] = req.body[update])
+        await recipe.save()
         res.send(recipe)
     } catch(e) {
         res.status(500).send(e)
