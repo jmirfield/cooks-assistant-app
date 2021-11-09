@@ -24,10 +24,10 @@ MongoClient.connect(connectionURL, { useNewUrlParser: true }, (error, client) =>
     // })
 
     // *** Deleting single document by ObjectId
-    db.collection('users').deleteMany({__v: 0}, (error, result) => {
-        if(error)return console.log('Error with deleting documents')
-        console.log(result.deletedCount)
-    })
+    // db.collection('users').deleteMany({__v: 0}, (error, result) => {
+    //     if(error)return console.log('Error with deleting documents')
+    //     console.log(result.deletedCount)
+    // })
     
     // Retuns all collections within given DB
     // db.listCollections().toArray().then((col) => {
@@ -37,9 +37,8 @@ MongoClient.connect(connectionURL, { useNewUrlParser: true }, (error, client) =>
     // })
 
     // Retuns all documents in 'users' collection
-    db.collection('recipes').find({}).toArray((err, result) => {
-        if (err) return console.log(err)
-        console.log(result)
+    db.collection('recipes').indexes().then((t) => {
+        console.log(t)
     })
     
 
