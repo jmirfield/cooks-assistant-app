@@ -17,9 +17,23 @@ router.post('/recipes', auth, async (req, res) => {
     }
 })
 
+//GET /recipes?sortBy=updatedAt_asc
+//GET /recipes?sortBy=updatedAt_desc
 router.get('/recipes', auth, async (req, res) => {
+    const sort = {}
+    const options = { sort }
+    if (req.query.limit) options.limit = parseInt(req.query.limit)
+    if (req.query.skip) options.skip = parseInt(req.query.skip)
+    if (req.query.sortBy) {
+        const parts = req.query.sortBy.split("_")
+        options.sort[parts[0]] = parts[1] === 'desc' ? -1 : 1
+    }
+    console.log(options)
     try {
-        await req.user.populate('recipes')
+        await req.user.populate({
+            path: 'recipes',
+            options
+        })
         res.send(req.user.recipes)
     } catch(e) {
         res.status(500).send(e)

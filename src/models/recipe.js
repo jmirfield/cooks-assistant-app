@@ -39,7 +39,7 @@ const SavedURLSchema = new Schema({
     }
 })
 
-const Recipe = mongoose.model('Recipe', {
+const RecipeSchema = new Schema({
     name: {
         type: String,
         required: true,
@@ -57,6 +57,10 @@ const Recipe = mongoose.model('Recipe', {
         required: true,
         ref: 'User'
     }
+}, {
+    timestamps: true
 })
+
+const Recipe = mongoose.model('Recipe', RecipeSchema)
 
 module.exports = Recipe
