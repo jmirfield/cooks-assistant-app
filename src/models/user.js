@@ -78,7 +78,7 @@ UserSchema.pre('save', async function (next) {
 })
 
 //Deletes all recipes if User is removed
-UserSchema.pre('remove', async function (next) {
+UserSchema.pre('deleteOne', { document: true } , async function (next) {
     await Recipe.deleteMany({ owner: this._id })
     next()
 })
