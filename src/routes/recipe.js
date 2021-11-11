@@ -1,9 +1,13 @@
 const express = require('express')
 const router = new express.Router()
 const Recipe = require('../models/recipe')
+const auth = require('../middleware/auth')
 
-router.post('/recipes', async (req, res) => {
-    const recipe = new Recipe(req.body)
+router.post('/recipes', auth, async (req, res) => {
+    const recipe = new Recipe({
+        ...req.body,
+        owner: req.user._id
+    })
     try {
         await recipe.save()
         res.status(201).send(recipe)
@@ -13,19 +17,18 @@ router.post('/recipes', async (req, res) => {
     }
 })
 
-router.get('/recipes', async (req, res) => {
+router.get('/recipes', auth, async (req, res) => {
     try {
-        const recipes = await Recipe.find({})
-        res.send(recipes)
+        await req.user.populate('recipes')
+        res.send(req.user.recipes)
     } catch(e) {
         res.status(500).send(e)
     }
 })
 
-router.get('/recipes/:id', async (req, res) => {
-    const _id = req.params.id
+router.get('/recipes/:id', auth, async (req, res) => {
     try {
-        const recipe = await Recipe.findById(_id)
+        const recipe = await Recipe.findOne({_id: req.params.id, owner: req.user._id})
         if(!recipe)return res.status(404).send()
         res.send(recipe)
     } catch(e) {
@@ -33,14 +36,13 @@ router.get('/recipes/:id', async (req, res) => {
     }
 })
 
-router.patch('/recipes/:id', async (req, res) => {
+router.patch('/recipes/:id', auth, async (req, res) => {
     const updates = Object.keys(req.body)
-    const allowedUpdates = ['ingredients', 'instructions', 'savedUrls']
+    const allowedUpdates = ['ingredients', 'instructions', 'savedUrls', 'name']
     const isValidUpdate = updates.every((update) => allowedUpdates.includes(update))
     if(!isValidUpdate)return res.status(400).send({'error': 'Invalid updates!'})
-    const _id = req.params.id
     try {
-        const recipe = await Recipe.findById(_id)
+        const recipe = await Recipe.findOne({_id: req.params.id, owner: req.user._id})
         if(!recipe)return res.status(404).send()
         updates.forEach((update) => recipe[update] = req.body[update])
         await recipe.save()
@@ -50,10 +52,9 @@ router.patch('/recipes/:id', async (req, res) => {
     }
 })
 
-router.delete('/recipes/:id', async (req, res) => {
-    const _id = req.params.id
-    try{
-        const recipe = await Recipe.findByIdAndDelete(_id)
+router.delete('/recipes/:id', auth, async (req, res) => {
+    try {
+        const recipe = await Recipe.findOneAndDelete({_id: req.params.id, owner: req.user._id})
         if(!recipe)return res.status(404).send()
         res.send(recipe)
     } catch(e) {

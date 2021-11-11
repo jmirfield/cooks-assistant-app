@@ -3,6 +3,7 @@ const { Schema } = mongoose
 const validator = require('validator')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
+const Recipe = require('./recipe')
 
 const UserSchema = new Schema({
     username: {
@@ -38,6 +39,12 @@ const UserSchema = new Schema({
     }]
 })
 
+UserSchema.virtual('recipes', {
+    ref: 'Recipe',
+    localField: '_id',
+    foreignField: 'owner'
+})
+
 //Generates login JWT token
 UserSchema.methods.generateAuthToken = async function() {
     const token = jwt.sign({_id: this._id.toString()}, 'thisisatestsecrettoken')
@@ -67,6 +74,12 @@ UserSchema.pre('save', async function (next) {
     if(this.isModified('password')) {
         this.password = await bcrypt.hash(this.password, 8)
     }
+    next()
+})
+
+//Deletes all recipes if User is removed
+UserSchema.pre('remove', async function (next) {
+    await Recipe.deleteMany({ owner: this._id })
     next()
 })
 

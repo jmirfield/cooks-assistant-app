@@ -51,7 +51,12 @@ const Recipe = mongoose.model('Recipe', {
         type: String,
         trim: true
     },
-    savedUrls: [SavedURLSchema]
+    savedUrls: [SavedURLSchema],
+    owner: {
+        type: Schema.Types.ObjectId,
+        required: true,
+        ref: 'User'
+    }
 })
 
 module.exports = Recipe
