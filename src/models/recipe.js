@@ -29,7 +29,6 @@ const InstructionSchema = new Schema({
 const SavedURLSchema = new Schema({
     URL: {
         type: String,
-        unique: true,
         validate(val){
             if(!validator.isURL(val))throw new Error('Invalid URL')
         }
@@ -40,14 +39,28 @@ const SavedURLSchema = new Schema({
     }
 })
 
-const Recipe = mongoose.model('Recipe', {
+const RecipeSchema = new Schema({
+    name: {
+        type: String,
+        required: true,
+        trim: true
+    },
     ingredients: [IngredientSchema],
     instructions: [InstructionSchema],
     notes: {
         type: String,
         trim: true
     },
-    savedUrls: [SavedURLSchema]
+    savedUrls: [SavedURLSchema],
+    owner: {
+        type: Schema.Types.ObjectId,
+        required: true,
+        ref: 'User'
+    }
+}, {
+    timestamps: true
 })
+
+const Recipe = mongoose.model('Recipe', RecipeSchema)
 
 module.exports = Recipe

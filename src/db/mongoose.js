@@ -8,18 +8,3 @@ mongoose.connect(CONNECTION_URL + DATABASE_NAME, {
 }, (err) => {
     if(err)console.log(err)
 })
-
-
-
-
-
-// Testing User model and saving to DB
-// const test = new Task({
-//     description: "Test test test"
-// })
-
-// test.save().then(() => {
-//     console.log(test)
-// }).catch((error) => {
-//     console.log(error)
-// })
