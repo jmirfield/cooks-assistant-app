@@ -4,7 +4,7 @@ const userRouter = require('./routes/user')
 const recipeRouter = require('./routes/recipe')
 
 const app = express()
-const PORT = process.env.PORT || 3000
+const PORT = process.env.PORT
 
 app.use(express.json())
 

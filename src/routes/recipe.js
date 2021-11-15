@@ -28,7 +28,6 @@ router.get('/recipes', auth, async (req, res) => {
         const parts = req.query.sortBy.split("_")
         options.sort[parts[0]] = parts[1] === 'desc' ? -1 : 1
     }
-    console.log(options)
     try {
         await req.user.populate({
             path: 'recipes',
