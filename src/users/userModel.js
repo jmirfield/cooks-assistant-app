@@ -3,7 +3,7 @@ const { Schema } = mongoose
 const validator = require('validator')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
-const Recipe = require('./recipe')
+const Recipe = require('../recipes/recipeModel')
 
 const UserSchema = new Schema({
     username: {

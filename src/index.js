@@ -1,7 +1,7 @@
 const express = require('express')
 require('./db/mongoose')
-const userRouter = require('./routes/user')
-const recipeRouter = require('./routes/recipe')
+const userRouter = require('./users/userRouter')
+const recipeRouter = require('./recipes/recipeRouter')
 
 const app = express()
 const PORT = process.env.PORT
