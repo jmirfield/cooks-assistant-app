@@ -27,7 +27,7 @@ const UserSchema = new Schema({
         required: true,
         trim: true,
         validate(val) {
-            if(val.length < 6) throw new Error("Passsword needs to be at least 7 characters")
+            if(val.length < 7)throw new Error("Passsword needs to be at least 7 characters")
             if(val.toLowerCase().includes("password"))throw new Error("Password cannot contain 'password'")
         }
     },
