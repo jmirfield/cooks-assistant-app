@@ -11,7 +11,6 @@ class RecipeController {
             await recipe.save()
             res.status(201).send(recipe)
         } catch(e) {
-            console.log(e)
             res.status(400).send(e)
         }
     }

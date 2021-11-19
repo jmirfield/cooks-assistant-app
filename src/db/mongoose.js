@@ -1,7 +1,8 @@
 const mongoose = require('mongoose')
 
 mongoose.connect(process.env.MONGODB_URL, { 
-    useNewUrlParser: true
+    useNewUrlParser: true,
+    useUnifiedTopology: true
 }, (err) => {
     if(err)return console.log(err)
 })

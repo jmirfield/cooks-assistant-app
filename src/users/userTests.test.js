@@ -1,38 +1,28 @@
 const request = require('supertest')
-const jwt = require('jsonwebtoken')
-const mongoose = require('mongoose')
 const app = require('../app')
 const User = require('./userModel')
+const { testUserId, testUser, setupDB } = require('../db/fixtures/dbtest.js')
 
-const testUserId = new mongoose.Types.ObjectId()
+jest.setTimeout(60000)
 
-const testUser = {
-    username: 'test1',
-    email: 'test1@test.com',
-    password: 'test1pass',
-    _id: testUserId,
-    tokens: [{
-        token: jwt.sign({_id: testUserId}, process.env.JWT_SECRET)
-    }]
-}
-
-beforeEach(async () => {
-    await User.deleteMany()
-    await new User(testUser).save()
-})
+beforeEach(setupDB)
 
 test('Should signup a new user', async() => {
-    await request(app).post('/users')
+    const response = await request(app)
+        .post('/users')
         .send({
             'username': 'test2',
             'email': 'test2@test.com',
             'password': 'test2pass'
         })
         .expect(201)
+    const user = await User.findById(response.body.user._id)
+    expect(user).not.toBeNull()
 })
 
 test('Should FAIL signup because username already taken', async() => {
-    await request(app).post('/users')
+    await request(app)
+        .post('/users')
         .send({
             'username': 'test1',
             'email': 'testfail1@test.com',
@@ -42,7 +32,8 @@ test('Should FAIL signup because username already taken', async() => {
 })
 
 test('Should FAIL signup because email is already taken', async() => {
-    await request(app).post('/users')
+    await request(app)
+        .post('/users')
         .send({
             'username': 'testfail2',
             'email': 'test1@test.com',
@@ -53,7 +44,8 @@ test('Should FAIL signup because email is already taken', async() => {
 
 
 test('Should FAIL signup because password contains string: \'password\'', async() => {
-    await request(app).post('/users')
+    await request(app)
+        .post('/users')
         .send({
             'username': 'testfail3',
             'email': 'test3@test.com',
@@ -63,7 +55,8 @@ test('Should FAIL signup because password contains string: \'password\'', async(
 })
 
 test('Should FAIL signup because password is too short', async() => {
-    await request(app).post('/users')
+    await request(app)
+        .post('/users')
         .send({
             'username': 'testfail4',
             'email': 'test4@test.com',
@@ -73,7 +66,8 @@ test('Should FAIL signup because password is too short', async() => {
 })
 
 test('Should FAIL signup because invalid email format', async() => {
-    await request(app).post('/users')
+    await request(app)
+        .post('/users')
         .send({
             'username': 'testfail5',
             'email': 'test5@test',
@@ -83,7 +77,8 @@ test('Should FAIL signup because invalid email format', async() => {
 })
 
 test('Should Fail login since non-existing user', async() => {
-    await request(app).post('/users/login')
+    await request(app)
+        .post('/users/login')
         .send({
             'email': 'none@test.com',
             'password': 'testfail6'
@@ -92,7 +87,8 @@ test('Should Fail login since non-existing user', async() => {
 })
 
 test('Should Fail login since wrong password for test user', async() => {
-    await request(app).post('/users/login')
+    await request(app)
+        .post('/users/login')
         .send({
             'email': testUser.email,
             'password': 'testfail7'
@@ -101,12 +97,15 @@ test('Should Fail login since wrong password for test user', async() => {
 })
 
 test('Should login existing test user', async() => {
-    await request(app).post('/users/login')
+    const response = await request(app)
+        .post('/users/login')
         .send({
             'email': testUser.email,
             'password': testUser.password
         })
         .expect(200)
+    const user = await User.findById(response.body.user._id)
+    expect(response.body.token).toBe(user.tokens[1].token)
 })
 
 test('Should logout current user', async() => {
@@ -165,6 +164,8 @@ test('Should update current user profile', async() => {
             username: 'newtestuser'
         })
         .expect(200)
+    const user = await User.findById(testUserId)
+    expect(user.username).toEqual('newtestuser')
 })
 
 test('Should FAIL to update current user profile since incorrect token', async() => {
@@ -175,6 +176,8 @@ test('Should FAIL to update current user profile since incorrect token', async()
             username: 'newtestuser'
         })
         .expect(401)
+    const user = await User.findById(testUserId)
+    expect(user.username).not.toEqual('newtestuser')
 })
 
 test('Should FAIL to update current user profile since tokens cannot be modified through patch method', async() => {
@@ -188,11 +191,13 @@ test('Should FAIL to update current user profile since tokens cannot be modified
 })
 
 test('Should delete current user', async() => {
-    await request(app)
+    const response = await request(app)
         .delete('/users/me')
         .set('Authorization', `Bearer ${testUser.tokens[0].token}`)
         .send()
         .expect(200)
+    const user = await User.findById(testUserId)
+    expect(user).toBeNull()
 })
 
 test('Should FAIL to delete current user since incorrect token', async() => {
