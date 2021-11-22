@@ -1,7 +1,7 @@
 const request = require('supertest')
 const app = require('../app')
 const User = require('./userModel')
-const { testUserId, testUser, setupDB } = require('../db/fixtures/dbtest.js')
+const { testUserId1, testUser1, setupDB } = require('../db/fixtures/dbtest.js')
 
 jest.setTimeout(60000)
 
@@ -11,9 +11,9 @@ test('Should signup a new user', async() => {
     const response = await request(app)
         .post('/users')
         .send({
-            'username': 'test2',
-            'email': 'test2@test.com',
-            'password': 'test2pass'
+            'username': 'testtest',
+            'email': 'testtest@test.com',
+            'password': 'testtestpass'
         })
         .expect(201)
     const user = await User.findById(response.body.user._id)
@@ -90,7 +90,7 @@ test('Should Fail login since wrong password for test user', async() => {
     await request(app)
         .post('/users/login')
         .send({
-            'email': testUser.email,
+            'email': testUser1.email,
             'password': 'testfail7'
         })
         .expect(400)
@@ -100,8 +100,8 @@ test('Should login existing test user', async() => {
     const response = await request(app)
         .post('/users/login')
         .send({
-            'email': testUser.email,
-            'password': testUser.password
+            'email': testUser1.email,
+            'password': testUser1.password
         })
         .expect(200)
     const user = await User.findById(response.body.user._id)
@@ -111,7 +111,7 @@ test('Should login existing test user', async() => {
 test('Should logout current user', async() => {
     await request(app)
         .post('/users/logout')
-        .set('Authorization', `Bearer ${testUser.tokens[0].token}`)
+        .set('Authorization', `Bearer ${testUser1.tokens[0].token}`)
         .send()
         .expect(200)
 })
@@ -127,7 +127,7 @@ test('Should FAIL logout since incorrect token', async() => {
 test('Should logout all tokens for current user', async() => {
     await request(app)
         .post('/users/logoutAll')
-        .set('Authorization', `Bearer ${testUser.tokens[0].token}`)
+        .set('Authorization', `Bearer ${testUser1.tokens[0].token}`)
         .send()
         .expect(200)
 })
@@ -143,7 +143,7 @@ test('Should FAIL logging out all tokens for current user', async() => {
 test('Should read current user profile', async() => {
     await request(app)
         .get('/users/me')
-        .set('Authorization', `Bearer ${testUser.tokens[0].token}`)
+        .set('Authorization', `Bearer ${testUser1.tokens[0].token}`)
         .send()
         .expect(200)
 })
@@ -159,12 +159,12 @@ test('Should FAIL to read current user profile since incorrect token', async() =
 test('Should update current user profile', async() => {
     await request(app)
         .patch('/users/me')
-        .set('Authorization', `Bearer ${testUser.tokens[0].token}`)
+        .set('Authorization', `Bearer ${testUser1.tokens[0].token}`)
         .send({
             username: 'newtestuser'
         })
         .expect(200)
-    const user = await User.findById(testUserId)
+    const user = await User.findById(testUserId1)
     expect(user.username).toEqual('newtestuser')
 })
 
@@ -176,14 +176,14 @@ test('Should FAIL to update current user profile since incorrect token', async()
             username: 'newtestuser'
         })
         .expect(401)
-    const user = await User.findById(testUserId)
+    const user = await User.findById(testUserId1)
     expect(user.username).not.toEqual('newtestuser')
 })
 
 test('Should FAIL to update current user profile since tokens cannot be modified through patch method', async() => {
     await request(app)
         .patch('/users/me')
-        .set('Authorization', `Bearer ${testUser.tokens[0].token}`)
+        .set('Authorization', `Bearer ${testUser1.tokens[0].token}`)
         .send({
             tokens: []
         })
@@ -193,10 +193,10 @@ test('Should FAIL to update current user profile since tokens cannot be modified
 test('Should delete current user', async() => {
     const response = await request(app)
         .delete('/users/me')
-        .set('Authorization', `Bearer ${testUser.tokens[0].token}`)
+        .set('Authorization', `Bearer ${testUser1.tokens[0].token}`)
         .send()
         .expect(200)
-    const user = await User.findById(testUserId)
+    const user = await User.findById(testUserId1)
     expect(user).toBeNull()
 })
 
